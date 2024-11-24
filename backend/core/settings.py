@@ -145,6 +145,8 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 # ! ____________________________________________________________________________________
 # ! سایر تنظیمات
 
+AUTH_USER_MODEL = 'accounts.User'
+
 # تنظیمات ایمیل
 EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
 EMAIL_HOST = config("EMAIL_HOST",default="smtp4dev") #گذاشتیم default="smtp4dev" باشه برای همین docker-compose کانتینر مشخص شده در name باید برابر با اون
