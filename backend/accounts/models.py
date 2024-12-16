@@ -5,7 +5,7 @@ from django.utils.translation import gettext_lazy as _
 from django.contrib.auth.models import AbstractBaseUser, PermissionsMixin
 from django.db import models
 from django.core.validators import RegexValidator
-from accounts.validators import validate_iranian_cellphone_number, english_validator, english_persian_validator, validate_iranian_national_code
+from accounts.validators import validate_iranian_cellphone_number
 
 
 class UserType(models.IntegerChoices):
@@ -72,17 +72,18 @@ class User(AbstractBaseUser, PermissionsMixin):
 
 class Profile(models.Model):
     user = models.OneToOneField('User', on_delete=models.CASCADE)
-    first_name = models.CharField(max_length=255,  validators=[english_persian_validator])
-    last_name = models.CharField(max_length=255,  validators=[english_persian_validator])
+    first_name = models.CharField(max_length=255)
+    last_name = models.CharField(max_length=255)
     phone_number = models.CharField(max_length=12, validators=[validate_iranian_cellphone_number])
-    national_code = models.CharField(max_length=10, validators=[validate_iranian_national_code],)
 
     created_date = models.DateTimeField(auto_now_add=True)
     updated_date = models.DateTimeField(auto_now=True)
 
 
+# ! ساخته شد یک پروفایل نیز ساخته خواهد شد User با کدهای زیر هنگامی که یک اکانت
 @receiver(post_save,sender=User)
 def create_profile(sender,instance,created,**kwargs):
+    # ! باشد customer مقدارش UserType البته درصورتی که نوع
     if created and instance.type == UserType.customer.value:
         Profile.objects.create(user=instance, pk=instance.pk)
         
